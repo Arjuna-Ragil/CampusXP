@@ -1,7 +1,19 @@
 import AdminLayout from "@/components/layout/AdminLayout";
 import { ArrowUp, User, Zap, TrendingUp, FolderOpen, ChevronRight } from "lucide-react";
+import { serverFetch } from "@/lib/api/serverApi";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  let stats: any = {};
+  try {
+    stats = await serverFetch("/admin/stats");
+  } catch (err) {
+    console.error("Failed to fetch admin stats", err);
+  }
+
+  const totalStudents = stats?.total_students || 0;
+  const totalSkills = stats?.total_skills_mapped || 0;
+  const totalPortfolios = stats?.total_submitted_portfolios || 0;
+
   return (
     <AdminLayout>
       <div className="flex flex-col gap-lg">
@@ -11,11 +23,7 @@ export default function AdminDashboard() {
           <div className="bg-surface-container-lowest p-md rounded-xl shadow-sm border-l-4 border-primary flex items-start justify-between hover:shadow-md transition-all group active:scale-95 duration-200">
             <div>
               <p className="font-label-md text-label-md text-on-surface-variant mb-1">Total Registered Students</p>
-              <h3 className="font-display-lg text-primary text-[40px]">1,250</h3>
-              <p className="font-label-sm text-label-sm text-emerald-600 flex items-center mt-2">
-                <ArrowUp className="w-4 h-4 mr-1" />
-                +12% from last month
-              </p>
+              <h3 className="font-display-lg text-primary text-[40px]">{totalStudents.toLocaleString()}</h3>
             </div>
             <div className="bg-primary-fixed p-3 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
               <User className="w-6 h-6 text-primary group-hover:text-white" />
@@ -25,11 +33,7 @@ export default function AdminDashboard() {
           <div className="bg-surface-container-lowest p-md rounded-xl shadow-sm border-l-4 border-secondary flex items-start justify-between hover:shadow-md transition-all group active:scale-95 duration-200">
             <div>
               <p className="font-label-md text-label-md text-on-surface-variant mb-1">Total Skills Mapped</p>
-              <h3 className="font-display-lg text-primary text-[40px]">4,800</h3>
-              <p className="font-label-sm text-label-sm text-emerald-600 flex items-center mt-2">
-                <ArrowUp className="w-4 h-4 mr-1" />
-                +8.4% growth
-              </p>
+              <h3 className="font-display-lg text-primary text-[40px]">{totalSkills.toLocaleString()}</h3>
             </div>
             <div className="bg-secondary-fixed p-3 rounded-lg group-hover:bg-secondary group-hover:text-white transition-colors">
               <Zap className="w-6 h-6 text-secondary group-hover:text-white" />
@@ -39,11 +43,7 @@ export default function AdminDashboard() {
           <div className="bg-surface-container-lowest p-md rounded-xl shadow-sm border-l-4 border-tertiary flex items-start justify-between hover:shadow-md transition-all group active:scale-95 duration-200">
             <div>
               <p className="font-label-md text-label-md text-on-surface-variant mb-1">Submitted Portfolios</p>
-              <h3 className="font-display-lg text-primary text-[40px]">620</h3>
-              <p className="font-label-sm text-label-sm text-on-surface-variant flex items-center mt-2">
-                <TrendingUp className="w-4 h-4 mr-1" />
-                Active tracking enabled
-              </p>
+              <h3 className="font-display-lg text-primary text-[40px]">{totalPortfolios.toLocaleString()}</h3>
             </div>
             <div className="bg-tertiary-fixed p-3 rounded-lg group-hover:bg-tertiary group-hover:text-white transition-colors">
               <FolderOpen className="w-6 h-6 text-tertiary group-hover:text-white" />

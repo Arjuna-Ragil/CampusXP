@@ -52,7 +52,6 @@ func SeedDB(db *gorm.DB) {
 		studentSkill := models.StudentSkill{
 			StudentID: studentProfile.ID,
 			SkillID:   skills[0].ID, // Python
-			Status:    models.StatusApproved,
 		}
 		db.Where(models.StudentSkill{StudentID: studentProfile.ID, SkillID: skills[0].ID}).Attrs(studentSkill).FirstOrCreate(&studentSkill)
 	}

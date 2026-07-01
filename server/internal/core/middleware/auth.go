@@ -96,6 +96,20 @@ func (db *AuthDB) AuthMiddleware() gin.HandlerFunc {
 		}
 
 		c.Set("userID", user.ID)
+		c.Set("userRole", user.Role)
+		c.Next()
+	}
+}
+
+func (db *AuthDB) RequireAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, exists := c.Get("userRole")
+		if !exists || role != models.RoleAdmin {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"error": "Admin access required",
+			})
+			return
+		}
 		c.Next()
 	}
 }

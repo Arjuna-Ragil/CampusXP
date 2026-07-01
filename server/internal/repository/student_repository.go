@@ -16,6 +16,7 @@ type StudentRepository interface {
 	GetRewardByID(id string) (*models.Reward, error)
 	UpdatePoints(tx *gorm.DB, studentID string, pointsToDeduct int) error
 	GetDB() *gorm.DB // For transaction management
+	AddStudentSkill(studentID string, skillName string) error
 }
 
 type studentRepository struct {
@@ -43,6 +44,33 @@ func (r *studentRepository) UpdateProfile(profile *models.StudentProfile) error 
 
 func (r *studentRepository) SubmitAchievement(achievement *models.Achievement) error {
 	return r.db.Create(achievement).Error
+}
+
+func (r *studentRepository) AddStudentSkill(studentID string, skillName string) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		var skill models.Skill
+		// Check if skill exists (case-insensitive approximation by using raw string or just lowercase check)
+		// For simplicity, we just use FirstOrCreate
+		err := tx.Where("name = ?", skillName).FirstOrCreate(&skill, models.Skill{Name: skillName}).Error
+		if err != nil {
+			return err
+		}
+		
+		// Check if student already has this skill
+		var count int64
+		tx.Model(&models.StudentSkill{}).Where("student_id = ? AND skill_id = ?", studentID, skill.ID).Count(&count)
+		if count > 0 {
+			// Already has it, do nothing or return nil
+			return nil
+		}
+
+		// Create student skill
+		studentSkill := models.StudentSkill{
+			StudentID: studentID,
+			SkillID:   skill.ID,
+		}
+		return tx.Create(&studentSkill).Error
+	})
 }
 
 func (r *studentRepository) GetSubmissions(studentID string) ([]models.Achievement, error) {

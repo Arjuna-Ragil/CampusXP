@@ -23,6 +23,7 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
   const response = await fetch(url, {
     ...options,
     headers,
+    cache: "no-store",
   });
 
   if (!response.ok) {

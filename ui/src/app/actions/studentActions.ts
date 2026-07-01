@@ -19,6 +19,20 @@ export async function submitAchievement(formData: FormData) {
   revalidatePath("/student/submission");
 }
 
+export async function submitSkill(formData: FormData) {
+  const payload = {
+    skill_name: formData.get("skill_name") as string,
+  };
+
+  await serverFetch("/students/skills", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  revalidatePath("/student/submission");
+  revalidatePath("/"); // Update dashboard skills
+}
+
 export async function claimRewardAction(rewardId: string) {
   await serverFetch(`/students/rewards/${rewardId}/claim`, {
     method: "POST",

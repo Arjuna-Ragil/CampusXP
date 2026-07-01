@@ -72,6 +72,24 @@ func (h *StudentHandler) SubmitAchievement(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Achievement submitted successfully", "data": req})
 }
 
+func (h *StudentHandler) SubmitSkill(c *gin.Context) {
+	userID := c.GetString("userID")
+	
+	var req struct {
+		SkillName string `json:"skill_name" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.studentService.AddSkill(userID, req.SkillName); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"message": "Skill added successfully"})
+}
+
 func (h *StudentHandler) GetAchievements(c *gin.Context) {
 	userID := c.GetString("userID")
 	achievements, err := h.studentService.GetSubmissions(userID)

@@ -38,6 +38,8 @@ func (r *adminRepository) GetDashboardStats() (map[string]int64, error) {
 	stats := make(map[string]int64)
 	var studentCount int64
 	var pendingCount int64
+	var skillMapCount int64
+	var portfolioCount int64
 
 	if err := r.db.Model(&models.User{}).Where("role = ?", models.RoleMahasiswa).Count(&studentCount).Error; err != nil {
 		return nil, err
@@ -45,9 +47,17 @@ func (r *adminRepository) GetDashboardStats() (map[string]int64, error) {
 	if err := r.db.Model(&models.Achievement{}).Where("status = ?", models.StatusPending).Count(&pendingCount).Error; err != nil {
 		return nil, err
 	}
+	if err := r.db.Model(&models.Skill{}).Count(&skillMapCount).Error; err != nil {
+		return nil, err
+	}
+	if err := r.db.Model(&models.Achievement{}).Count(&portfolioCount).Error; err != nil {
+		return nil, err
+	}
 
 	stats["total_students"] = studentCount
 	stats["total_pending_submissions"] = pendingCount
+	stats["total_skills_mapped"] = skillMapCount
+	stats["total_submitted_portfolios"] = portfolioCount
 	return stats, nil
 }
 

@@ -15,6 +15,7 @@ type StudentService interface {
 	GetLeaderboard() ([]models.StudentProfile, error)
 	ClaimReward(studentID, rewardID string) error
 	GetRewards() ([]models.Reward, error)
+	AddSkill(userID string, skillName string) error
 }
 
 type studentService struct {
@@ -71,6 +72,14 @@ func (s *studentService) SubmitAchievement(userID string, achievement *models.Ac
 	achievement.StudentID = profile.ID
 	achievement.Status = models.StatusPending
 	return s.repo.SubmitAchievement(achievement)
+}
+
+func (s *studentService) AddSkill(userID string, skillName string) error {
+	profile, err := s.repo.GetProfile(userID)
+	if err != nil {
+		return err
+	}
+	return s.repo.AddStudentSkill(profile.ID, skillName)
 }
 
 func (s *studentService) GetSubmissions(userID string) ([]models.Achievement, error) {

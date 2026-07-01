@@ -14,10 +14,27 @@ export const authOptions: NextAuthOptions = {
       if (account) {
         token.accessToken = account.access_token;
       }
+      if (token.accessToken && !token.role) {
+        try {
+          // Fetch the user's role from the backend
+          const res = await fetch("http://127.0.0.1:8080/api/v1/users/me", {
+            headers: {
+              Authorization: `Bearer ${token.accessToken}`,
+            },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            token.role = data.role;
+          }
+        } catch (e) {
+          console.error("Failed to fetch user role", e);
+        }
+      }
       return token;
     },
     async session({ session, token }) {
       (session as any).accessToken = token.accessToken;
+      (session as any).role = token.role;
       return session;
     },
   },

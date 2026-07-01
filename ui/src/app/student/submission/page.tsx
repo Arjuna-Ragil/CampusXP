@@ -2,33 +2,34 @@ import StudentLayout from "@/components/layout/StudentLayout";
 import { Star, PlusCircle, Upload, Send, Filter, CheckCircle, XCircle, FileText, Lightbulb } from "lucide-react";
 
 import { serverFetch } from "@/lib/api/serverApi";
-import { submitAchievement } from "@/app/actions/studentActions";
+import { submitAchievement, submitSkill } from "@/app/actions/studentActions";
+import Link from "next/link";
 
-export default async function StudentSubmission() {
+export default async function StudentSubmission({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const params = await searchParams;
+  const currentTab = params.tab === "skill" ? "skill" : "achievement";
+  let profile: any = null;
   let achievements: any[] = [];
   try {
+    profile = await serverFetch("/students/profile");
     const res = await serverFetch("/students/achievements");
     achievements = res || [];
   } catch (err) {
-    console.error("Failed to fetch achievements", err);
+    console.error("Failed to fetch", err);
   }
+
 
   return (
     <StudentLayout>
       {/* TopAppBar Context */}
-      <header className="flex justify-between items-center mb-xl">
+      <header className="mb-xl">
         <div>
           <h2 className="font-headline-lg text-headline-lg text-primary">Submission Center</h2>
           <p className="font-body-md text-body-md text-on-surface-variant">Document your journey and earn recognition for your achievements.</p>
-        </div>
-        <div className="flex items-center gap-md">
-          <div className="flex items-center gap-xs bg-tertiary-fixed text-on-tertiary-fixed px-sm py-base rounded-full shadow-sm">
-            <Star className="w-5 h-5 fill-tertiary-fixed text-tertiary-fixed" />
-            <span className="font-label-md text-label-md">1,240 pts</span>
-          </div>
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
-            <img className="w-full h-full object-cover" data-alt="Student avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCSq9bb_9BFdY8lAjCMaiB8kDajCFFwGzctjlSkJiHx9Oo4rJtAybMql0UtPxJPLPqeAJOrzrGTT0FFzhU7TGE7A52DgSNw0judHX_To5gUcltvW1PzHoxvyHtw_ptqMs4wbVIjNkjiqd14n3EB4qIHfk8uQ5yckruAjDUEIGxpj30iNQvPWvhGMaOao06lFeRk89etFVURMU2lukS6b5OtI7FfzVB-nABBRYDVThMphX1An2izFT5KEJL_CBF9iVm8rzlG95TtYQ"/>
-          </div>
         </div>
       </header>
       {/* Main Layout Grid */}
@@ -40,9 +41,22 @@ export default async function StudentSubmission() {
               <div className="bg-primary-container text-on-primary-fixed-dim p-base rounded-lg">
                 <PlusCircle className="w-6 h-6" />
               </div>
-              <h3 className="font-headline-md text-headline-md text-primary">Add New Achievement</h3>
+              <h3 className="font-headline-md text-headline-md text-primary">
+                {currentTab === 'skill' ? 'Add New Skill' : 'Add New Achievement'}
+              </h3>
             </div>
-            <form className="space-y-md" action={submitAchievement}>
+            
+            <div className="flex gap-2 mb-md bg-surface-container-low p-1 rounded-lg">
+              <Link href="?tab=achievement" className={`flex-1 text-center py-2 rounded-md font-label-md transition-all ${currentTab === 'achievement' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-variant'}`}>
+                Achievement
+              </Link>
+              <Link href="?tab=skill" className={`flex-1 text-center py-2 rounded-md font-label-md transition-all ${currentTab === 'skill' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-variant'}`}>
+                Skill
+              </Link>
+            </div>
+
+            {currentTab === 'achievement' ? (
+              <form className="space-y-md" action={submitAchievement}>
               <div className="space-y-base">
                 <label className="font-label-md text-label-md text-on-surface-variant">Achievement Title</label>
                 <input name="title" required className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline" placeholder="e.g., Python Web Scraper Project" type="text"/>
@@ -77,6 +91,22 @@ export default async function StudentSubmission() {
                 <Send className="w-5 h-5" />
               </button>
             </form>
+            ) : (
+              <form className="space-y-md" action={submitSkill}>
+                <div className="space-y-base">
+                  <label className="font-label-md text-label-md text-on-surface-variant">Skill Name</label>
+                  <input name="skill_name" required className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline" placeholder="e.g., Python, Figma, React" type="text"/>
+                </div>
+                <div className="bg-secondary-container/20 p-sm rounded-lg border border-secondary-container flex items-start gap-sm mt-4">
+                  <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
+                  <p className="text-[12px] text-on-surface-variant leading-tight">Skills are automatically verified and instantly added to your dashboard.</p>
+                </div>
+                <button className="w-full bg-primary text-on-primary py-sm rounded-lg font-bold hover:bg-secondary transition-all active:scale-95 shadow-md flex justify-center items-center gap-sm" type="submit">
+                  Add Skill
+                  <PlusCircle className="w-5 h-5" />
+                </button>
+              </form>
+            )}
           </div>
         </section>
         {/* Submissions Tracking Table */}

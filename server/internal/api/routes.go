@@ -19,12 +19,21 @@ func SetupRouter(r *gin.Engine, d Deps) {
 	// Use mock auth middleware for all api routes
 	api.Use(d.AuthMiddleware.AuthMiddleware())
 	
+	api.GET("/users/me", func(c *gin.Context) {
+		role, _ := c.Get("userRole")
+		c.JSON(200, gin.H{
+			"id": c.GetString("userID"),
+			"role": role,
+		})
+	})
+	
 	// Student Routes
 	students := api.Group("/students")
 	{
 		students.GET("/profile", d.StudentHandler.GetProfile)
 		students.PUT("/profile", d.StudentHandler.UpdateProfile)
 		students.POST("/achievements", d.StudentHandler.SubmitAchievement)
+		students.POST("/skills", d.StudentHandler.SubmitSkill)
 		students.GET("/achievements", d.StudentHandler.GetAchievements)
 		students.GET("/leaderboard", d.StudentHandler.GetLeaderboard)
 		students.POST("/rewards/claim", d.StudentHandler.ClaimReward)
@@ -35,6 +44,7 @@ func SetupRouter(r *gin.Engine, d Deps) {
 
 	// Admin Routes
 	admin := api.Group("/admin")
+	admin.Use(d.AuthMiddleware.RequireAdmin())
 	{
 		admin.GET("/stats", d.AdminHandler.GetDashboardStats)
 		admin.GET("/students", d.AdminHandler.GetStudents)
