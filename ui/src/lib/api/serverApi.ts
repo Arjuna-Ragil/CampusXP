@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1";
+const baseURL = process.env.INTERNAL_API_URL || "http://localhost:8080/api/v1";
 
 export async function serverFetch(endpoint: string, options: RequestInit = {}) {
   const session = await getServerSession(authOptions);
