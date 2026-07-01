@@ -8,7 +8,7 @@ export default async function StudentSubmission() {
   let achievements: any[] = [];
   try {
     const res = await serverFetch("/students/achievements");
-    achievements = res.data || [];
+    achievements = res || [];
   } catch (err) {
     console.error("Failed to fetch achievements", err);
   }
@@ -143,7 +143,7 @@ export default async function StudentSubmission() {
               </tbody>
             </table>
             {/* Empty State (Hidden by default, shown if no rows) */}
-            <div className="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-md" id="upload-modal">
+            <div className="fixed inset-0 z-[100] hidden flex items-center justify-center p-md" id="upload-modal">
               <div className="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-md">
                 <FileText className="text-outline w-12 h-12" />
               </div>

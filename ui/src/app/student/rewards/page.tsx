@@ -8,11 +8,11 @@ export default async function StudentRewards() {
   let profile: any = null;
 
   try {
-    const rewardsRes = await serverFetch("/students/rewards");
-    rewards = rewardsRes.data || [];
+    const rewardsRes = await serverFetch("/rewards");
+    rewards = rewardsRes || [];
 
     const profileRes = await serverFetch("/students/profile");
-    profile = profileRes.data || {};
+    profile = profileRes || {};
   } catch (err) {
     console.error("Failed to fetch rewards/profile", err);
   }

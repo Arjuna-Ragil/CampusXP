@@ -26,6 +26,20 @@ func (h *StudentHandler) GetProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, profile)
 }
 
+func (h *StudentHandler) UpdateProfile(c *gin.Context) {
+	userID := c.GetString("userID")
+	var req models.StudentProfile
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := h.studentService.UpdateProfile(userID, &req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Profile updated successfully"})
+}
+
 func (h *StudentHandler) SubmitAchievement(c *gin.Context) {
 	userID := c.GetString("userID")
 	

@@ -7,7 +7,7 @@ export default async function AdminVerification() {
   let pendingSubmissions: any[] = [];
   try {
     const res = await serverFetch("/admin/submissions/pending");
-    pendingSubmissions = res.data || [];
+    pendingSubmissions = res || [];
   } catch (err) {
     console.error("Failed to fetch pending submissions", err);
   }

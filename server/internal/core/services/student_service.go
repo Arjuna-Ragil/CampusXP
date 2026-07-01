@@ -9,6 +9,7 @@ import (
 
 type StudentService interface {
 	GetProfile(userID string) (map[string]interface{}, error)
+	UpdateProfile(userID string, req *models.StudentProfile) error
 	SubmitAchievement(studentID string, achievement *models.Achievement) error
 	GetSubmissions(studentID string) ([]models.Achievement, error)
 	GetLeaderboard() ([]models.StudentProfile, error)
@@ -42,6 +43,24 @@ func (s *studentService) GetProfile(userID string) (map[string]interface{}, erro
 		"total_points":    profile.TotalPoints,
 		"recommendations": recommendations,
 	}, nil
+}
+
+func (s *studentService) UpdateProfile(userID string, req *models.StudentProfile) error {
+	profile, err := s.repo.GetProfile(userID)
+	if err != nil {
+		return err
+	}
+	// Update allowed fields
+	if req.NIM != "" {
+		profile.NIM = req.NIM
+	}
+	if req.Major != "" {
+		profile.Major = req.Major
+	}
+	if req.Bio != "" {
+		profile.Bio = req.Bio
+	}
+	return s.repo.UpdateProfile(profile)
 }
 
 func (s *studentService) SubmitAchievement(userID string, achievement *models.Achievement) error {

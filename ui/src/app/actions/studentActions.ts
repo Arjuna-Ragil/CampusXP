@@ -26,3 +26,18 @@ export async function claimRewardAction(rewardId: string) {
 
   revalidatePath("/student/rewards");
 }
+
+export async function updateProfileAction(formData: FormData) {
+  const payload = {
+    nim: formData.get("nim") as string,
+    major: formData.get("major") as string,
+    bio: formData.get("bio") as string,
+  };
+
+  await serverFetch("/students/profile", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+
+  revalidatePath("/");
+}

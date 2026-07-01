@@ -39,6 +39,7 @@ type User struct {
 	Username       string          `gorm:"not null" json:"username"`
 	Email          string          `gorm:"unique;not null" json:"email"`
 	Role           RoleType        `gorm:"type:varchar(50);not null" json:"role"`
+	PFPURL         string          `json:"pfp_url"`
 	CreatedAt      time.Time       `json:"created_at"`
 	UpdatedAt      time.Time       `json:"updated_at"`
 	StudentProfile *StudentProfile `gorm:"constraint:OnDelete:CASCADE;" json:"student_profile,omitempty"`

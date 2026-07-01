@@ -7,7 +7,7 @@ export default async function StudentLeaderboard() {
   let leaderboard: any[] = [];
   try {
     const res = await serverFetch("/students/leaderboard");
-    leaderboard = res.data || [];
+    leaderboard = res || [];
   } catch (err) {
     console.error("Failed to fetch leaderboard", err);
   }
@@ -44,14 +44,14 @@ export default async function StudentLeaderboard() {
             <div className="flex items-center gap-md">
               <div className="relative">
                 <div className="w-20 h-20 rounded-full border-4 border-tertiary-fixed p-1 bg-surface-variant flex items-center justify-center font-bold text-on-surface-variant text-2xl">
-                  {top1.profile?.full_name?.charAt(0) || "U"}
+                  {top1.full_name?.charAt(0) || "U"}
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-tertiary-container text-on-tertiary-container w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 border-surface-container-lowest">1</div>
               </div>
               <div>
                 <p className="font-label-md text-label-md text-tertiary uppercase tracking-widest">Global Leader</p>
-                <h4 className="font-headline-md text-headline-md text-primary">{top1.profile?.full_name || "Unknown"}</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant">{top1.profile?.major || ""}</p>
+                <h4 className="font-headline-md text-headline-md text-primary">{top1.full_name || "Unknown"}</h4>
+                <p className="font-body-md text-body-md text-on-surface-variant">{top1.major || ""}</p>
                 <div className="flex items-center gap-xs mt-base text-tertiary font-bold">
                   <Star className="fill-tertiary w-4 h-4" />
                   <span>{top1.total_points} pts</span>
@@ -67,13 +67,13 @@ export default async function StudentLeaderboard() {
             <div className="flex items-center gap-md">
               <div className="relative">
                 <div className="w-16 h-16 rounded-full border-2 border-outline-variant p-1 bg-surface-variant flex items-center justify-center font-bold text-on-surface-variant text-xl">
-                  {top2.profile?.full_name?.charAt(0) || "U"}
+                  {top2.full_name?.charAt(0) || "U"}
                 </div>
                 <div className="absolute -bottom-1 -right-1 bg-outline-variant text-on-surface w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 border-surface-container-lowest">2</div>
               </div>
               <div>
-                <h4 className="font-headline-md text-headline-md text-primary">{top2.profile?.full_name || "Unknown"}</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant">{top2.profile?.major || ""}</p>
+                <h4 className="font-headline-md text-headline-md text-primary">{top2.full_name || "Unknown"}</h4>
+                <p className="font-body-md text-body-md text-on-surface-variant">{top2.major || ""}</p>
                 <div className="flex items-center gap-xs mt-xs text-primary/70 font-semibold text-sm">
                   <Star className="w-4 h-4 fill-primary/70 text-primary/70" />
                   <span>{top2.total_points} pts</span>
@@ -89,13 +89,13 @@ export default async function StudentLeaderboard() {
             <div className="flex items-center gap-md">
               <div className="relative">
                 <div className="w-16 h-16 rounded-full border-2 border-tertiary-fixed-dim/30 p-1 bg-surface-variant flex items-center justify-center font-bold text-on-surface-variant text-xl">
-                  {top3.profile?.full_name?.charAt(0) || "U"}
+                  {top3.full_name?.charAt(0) || "U"}
                 </div>
                 <div className="absolute -bottom-1 -right-1 bg-tertiary-fixed-dim text-on-tertiary-container w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 border-surface-container-lowest">3</div>
               </div>
               <div>
-                <h4 className="font-headline-md text-headline-md text-primary">{top3.profile?.full_name || "Unknown"}</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant">{top3.profile?.major || ""}</p>
+                <h4 className="font-headline-md text-headline-md text-primary">{top3.full_name || "Unknown"}</h4>
+                <p className="font-body-md text-body-md text-on-surface-variant">{top3.major || ""}</p>
                 <div className="flex items-center gap-xs mt-xs text-primary/70 font-semibold text-sm">
                   <Star className="w-4 h-4 fill-primary/70 text-primary/70" />
                   <span>{top3.total_points} pts</span>
@@ -130,12 +130,12 @@ export default async function StudentLeaderboard() {
                       <td className="px-md py-md">
                         <div className="flex items-center gap-sm">
                           <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-variant flex items-center justify-center font-bold text-xs">
-                            {student.profile?.full_name?.charAt(0) || "U"}
+                            {student.full_name?.charAt(0) || "U"}
                           </div>
-                          <span className="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">{student.profile?.full_name || "Unknown"}</span>
+                          <span className="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">{student.full_name || "Unknown"}</span>
                         </div>
                       </td>
-                      <td className="px-md py-md font-body-md text-body-md text-on-surface-variant hidden md:table-cell">{student.profile?.major || ""}</td>
+                      <td className="px-md py-md font-body-md text-body-md text-on-surface-variant hidden md:table-cell">{student.major || ""}</td>
                       <td className="px-md py-md text-right font-bold text-primary">{student.total_points}</td>
                     </tr>
                   ))

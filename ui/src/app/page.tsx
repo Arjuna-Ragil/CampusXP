@@ -1,4 +1,5 @@
 import StudentLayout from "@/components/layout/StudentLayout";
+import OnboardingModal from "@/components/OnboardingModal";
 import { IdCard, TrendingUp, Code, Users, Award, Brain, Send, Rocket, Sparkles } from "lucide-react";
 
 import { serverFetch } from "@/lib/api/serverApi";
@@ -7,13 +8,14 @@ export default async function StudentDashboard() {
   let profile = null;
   try {
     const res = await serverFetch("/students/profile");
-    profile = res.data;
+    profile = res;
   } catch (err) {
     console.error("Failed to fetch profile", err);
   }
 
   return (
     <StudentLayout>
+      <OnboardingModal nim={profile?.profile?.nim} major={profile?.profile?.major} />
       {/* Hero Section */}
       <section className="relative rounded-xl overflow-hidden mb-xl">
         <div className="absolute inset-0 z-0">

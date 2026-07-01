@@ -23,6 +23,7 @@ func SetupRouter(r *gin.Engine, d Deps) {
 	students := api.Group("/students")
 	{
 		students.GET("/profile", d.StudentHandler.GetProfile)
+		students.PUT("/profile", d.StudentHandler.UpdateProfile)
 		students.POST("/achievements", d.StudentHandler.SubmitAchievement)
 		students.GET("/achievements", d.StudentHandler.GetAchievements)
 		students.GET("/leaderboard", d.StudentHandler.GetLeaderboard)

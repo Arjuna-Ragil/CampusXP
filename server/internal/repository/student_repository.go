@@ -7,6 +7,7 @@ import (
 
 type StudentRepository interface {
 	GetProfile(userID string) (*models.StudentProfile, error)
+	UpdateProfile(profile *models.StudentProfile) error
 	SubmitAchievement(achievement *models.Achievement) error
 	GetSubmissions(studentID string) ([]models.Achievement, error)
 	GetLeaderboard(limit int) ([]models.StudentProfile, error)
@@ -34,6 +35,10 @@ func (r *studentRepository) GetProfile(userID string) (*models.StudentProfile, e
 	err := r.db.Preload("User").Preload("Achievements").Preload("StudentSkills.Skill").
 		Where("user_id = ?", userID).First(&profile).Error
 	return &profile, err
+}
+
+func (r *studentRepository) UpdateProfile(profile *models.StudentProfile) error {
+	return r.db.Model(profile).Select("NIM", "Major", "Bio").Updates(profile).Error
 }
 
 func (r *studentRepository) SubmitAchievement(achievement *models.Achievement) error {

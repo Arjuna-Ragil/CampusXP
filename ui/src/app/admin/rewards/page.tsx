@@ -7,7 +7,7 @@ export default async function AdminRewards() {
   let rewards: any[] = [];
   try {
     const res = await serverFetch("/admin/rewards");
-    rewards = res.data || [];
+    rewards = res || [];
   } catch (err) {
     console.error("Failed to fetch rewards", err);
   }

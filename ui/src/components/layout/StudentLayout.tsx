@@ -13,10 +13,27 @@ import {
   Award, 
   Globe, 
   MessageSquare, 
-  Plus 
+  Plus,
+  LogOut
 } from "lucide-react";
 
-export default function StudentLayout({ children }: { children: React.ReactNode }) {
+import { serverFetch } from "@/lib/api/serverApi";
+
+export default async function StudentLayout({ children }: { children: React.ReactNode }) {
+  let profile = null;
+  try {
+    const res = await serverFetch("/students/profile");
+    profile = res;
+  } catch (err) {
+    console.error("Failed to fetch profile in layout", err);
+  }
+
+  const user = profile?.profile?.user;
+  const fullName = profile?.profile?.full_name || user?.username || "Student";
+  const initials = fullName.charAt(0).toUpperCase();
+  const pfp = user?.pfp_url;
+  const points = profile?.total_points || 0;
+
   return (
     <div className="flex min-h-screen">
       {/* SideNavBar Component */}
@@ -44,16 +61,9 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
           </Link>
         </nav>
         <div className="mt-auto flex flex-col gap-base">
-          <button className="bg-primary text-on-primary rounded-lg py-sm px-md font-label-md text-label-md hover:bg-secondary transition-colors mb-md">
-            View Careers
-          </button>
-          <a className="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
-            <HelpCircle className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Support</span>
-          </a>
-          <a className="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all" href="#">
-            <Settings className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Settings</span>
+          <a className="flex items-center gap-sm px-md py-sm text-error hover:bg-error/10 rounded-lg transition-all" href="/api/auth/signout">
+            <LogOut className="w-5 h-5" />
+            <span className="font-label-md text-label-md">Logout</span>
           </a>
         </div>
       </aside>
@@ -73,7 +83,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
           <div className="flex items-center gap-lg">
             <div className="flex items-center gap-xs bg-tertiary-container/10 px-sm py-xs rounded-full border border-tertiary-container/20">
               <Star className="text-tertiary w-5 h-5 fill-tertiary" />
-              <span className="font-label-md text-label-md text-tertiary">2,450 pts</span>
+              <span className="font-label-md text-label-md text-tertiary">{points} pts</span>
             </div>
             <div className="flex items-center gap-md">
               <button className="text-on-surface-variant hover:bg-surface-variant p-base rounded-full transition-colors flex items-center justify-center">
@@ -83,9 +93,13 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
                 <Award className="w-6 h-6" />
               </button>
               <div className="flex items-center gap-sm cursor-pointer hover:bg-surface-variant px-sm py-xs rounded-full transition-colors">
-                <span className="font-label-md text-label-md hidden sm:block">Alex Johnson</span>
-                <div className="w-8 h-8 rounded-full overflow-hidden bg-outline-variant">
-                  <img className="w-full h-full object-cover" data-alt="Student avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzS3jzzk7wWhsBsKeQapkD6ZG5mBrKhUDFEwtzhyRW6aAWGO-22vGTTd-fO84i4wnUvhvIoHpVvUUPCeGGjS7vl-DmeFWVg9Mn9dDDEm_ptMpf4FGgezI-4ayL3IeeyKzb79Nwxhm3m0F-0XvXg2hvaCQPRxcTHZZUAZAd1RiW7ifRgUf4uX22Nj11xZlCa21hvxEBBUVfooDO3_i4fATMvOh5SZCFuFL2Ct37666TAqmo11kYV631CnMi2UUXmKhJ0uwb7uJhVzU"/>
+                <span className="font-label-md text-label-md hidden sm:block">{fullName}</span>
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-primary flex items-center justify-center text-on-primary font-bold">
+                  {pfp ? (
+                    <img className="w-full h-full object-cover" data-alt="Student avatar" src={pfp}/>
+                  ) : (
+                    <span>{initials}</span>
+                  )}
                 </div>
               </div>
             </div>
