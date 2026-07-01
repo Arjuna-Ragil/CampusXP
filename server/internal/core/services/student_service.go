@@ -12,7 +12,7 @@ type StudentService interface {
 	UpdateProfile(userID string, req *models.StudentProfile) error
 	SubmitAchievement(studentID string, achievement *models.Achievement) error
 	GetSubmissions(studentID string) ([]models.Achievement, error)
-	GetLeaderboard() ([]models.StudentProfile, error)
+	GetLeaderboard(major string) ([]models.StudentProfile, error)
 	ClaimReward(studentID, rewardID string) error
 	GetRewards() ([]models.Reward, error)
 	AddSkill(userID string, skillName string) error
@@ -90,9 +90,9 @@ func (s *studentService) GetSubmissions(userID string) ([]models.Achievement, er
 	return s.repo.GetSubmissions(profile.ID)
 }
 
-func (s *studentService) GetLeaderboard() ([]models.StudentProfile, error) {
+func (s *studentService) GetLeaderboard(major string) ([]models.StudentProfile, error) {
 	// Top 10 students
-	return s.repo.GetLeaderboard(10)
+	return s.repo.GetLeaderboard(10, major)
 }
 
 func (s *studentService) ClaimReward(userID, rewardID string) error {

@@ -11,6 +11,7 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - campusxp_net
+      - db_net
 
   backend:
     build: ./server
@@ -46,3 +47,5 @@ volumes:
 networks:
   campusxp_net:
     driver: bridge
+  db_net:
+    external: true

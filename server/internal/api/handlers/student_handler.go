@@ -101,7 +101,8 @@ func (h *StudentHandler) GetAchievements(c *gin.Context) {
 }
 
 func (h *StudentHandler) GetLeaderboard(c *gin.Context) {
-	leaderboard, err := h.studentService.GetLeaderboard()
+	major := c.Query("major")
+	leaderboard, err := h.studentService.GetLeaderboard(major)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

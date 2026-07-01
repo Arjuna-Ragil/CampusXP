@@ -10,7 +10,7 @@ type StudentRepository interface {
 	UpdateProfile(profile *models.StudentProfile) error
 	SubmitAchievement(achievement *models.Achievement) error
 	GetSubmissions(studentID string) ([]models.Achievement, error)
-	GetLeaderboard(limit int) ([]models.StudentProfile, error)
+	GetLeaderboard(limit int, major string) ([]models.StudentProfile, error)
 	ClaimReward(tx *gorm.DB, claim *models.RewardClaim) error
 	GetRewards() ([]models.Reward, error)
 	GetRewardByID(id string) (*models.Reward, error)
@@ -79,9 +79,13 @@ func (r *studentRepository) GetSubmissions(studentID string) ([]models.Achieveme
 	return achievements, err
 }
 
-func (r *studentRepository) GetLeaderboard(limit int) ([]models.StudentProfile, error) {
+func (r *studentRepository) GetLeaderboard(limit int, major string) ([]models.StudentProfile, error) {
 	var profiles []models.StudentProfile
-	err := r.db.Order("total_points desc").Limit(limit).Preload("User").Find(&profiles).Error
+	query := r.db.Order("total_points desc").Limit(limit).Preload("User")
+	if major != "" {
+		query = query.Where("major = ?", major)
+	}
+	err := query.Find(&profiles).Error
 	return profiles, err
 }
 

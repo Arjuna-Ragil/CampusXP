@@ -19,7 +19,7 @@ export default async function StudentDashboard() {
       {/* Hero Section */}
       <section className="relative rounded-xl overflow-hidden mb-xl">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-linear-to-r from-primary-container to-transparent opacity-90"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-gray-900 to-gray-800 opacity-95"></div>
         </div>
         <div className="relative z-10 p-lg md:p-xl flex flex-col md:flex-row justify-between items-center gap-lg">
           <div className="text-on-primary">

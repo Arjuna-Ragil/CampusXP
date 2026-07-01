@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import ChatbotFAB from "@/components/chat/ChatbotFAB";
+import SidebarNav from "./SidebarNav";
 import { 
   LayoutDashboard, 
   UserCircle, 
@@ -40,27 +41,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
       {/* SideNavBar Component */}
       <aside className="h-screen w-64 flex-col hidden lg:flex bg-surface-container-low dark:bg-surface-container-highest border-r border-outline-variant sticky top-0 shrink-0 p-md gap-base">
         <div className="mb-lg px-xs">
-          <h1 className="font-headline-md text-headline-md text-primary">Talent Hub</h1>
+          <h1 className="font-display-sm text-display-sm font-bold text-primary">Campus XP</h1>
           <p className="font-label-md text-label-md text-on-surface-variant">Student Portal</p>
         </div>
-        <nav className="flex flex-col gap-base grow">
-          <Link href="/" className="flex items-center gap-sm px-md py-sm hover:bg-surface-variant text-on-surface-variant rounded-lg transition-all">
-            <LayoutDashboard className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Dashboard</span>
-          </Link>
-          <Link href="/student/submission" className="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all">
-            <UserCircle className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Portfolio</span>
-          </Link>
-          <Link href="/student/leaderboard" className="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all">
-            <BarChart2 className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Leaderboard</span>
-          </Link>
-          <Link href="/student/rewards" className="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all">
-            <Gift className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Rewards</span>
-          </Link>
-        </nav>
+        <SidebarNav />
         <div className="mt-auto flex flex-col gap-base">
           <a className="flex items-center gap-sm px-md py-sm text-error hover:bg-error/10 rounded-lg transition-all" href="/api/auth/signout">
             <LogOut className="w-5 h-5" />
@@ -78,7 +62,6 @@ export default async function StudentLayout({ children }: { children: React.Reac
               <Menu className="w-6 h-6" />
             </button>
             <div className="hidden md:flex items-center gap-base">
-              <span className="font-body-md text-body-md text-primary font-bold">Talent Hub</span>
             </div>
           </div>
           <div className="flex items-center gap-lg">
