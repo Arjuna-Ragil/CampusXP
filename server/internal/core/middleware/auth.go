@@ -19,7 +19,7 @@ type AuthDB struct {
 
 func NewAuthDB(db *config.DB) *AuthDB {
 	ctx := context.Background()
-	provider, err := oidc.NewProvider(ctx, "https://sso.arjunaa.my.id/application/o/sprint-mont/") // ganti ini
+	provider, err := oidc.NewProvider(ctx, "https://sso.arjunaa.my.id/application/o/campus-xp/")
 	if err != nil {
 		log.Fatalf("Failed to connect to authentik: %v", err)
 	}

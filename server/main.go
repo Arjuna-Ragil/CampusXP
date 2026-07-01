@@ -5,9 +5,11 @@ import (
 	"log"
 
 	"github.com/Arjuna-Ragil/CampusXP/internal/api"
+	"github.com/Arjuna-Ragil/CampusXP/internal/api/handlers"
 	"github.com/Arjuna-Ragil/CampusXP/internal/config"
 	"github.com/Arjuna-Ragil/CampusXP/internal/core/middleware"
-	// "github.com/Arjuna-Ragil/CampusXP/internal/core/services"
+	"github.com/Arjuna-Ragil/CampusXP/internal/core/services"
+	"github.com/Arjuna-Ragil/CampusXP/internal/repository"
 	// "github.com/Arjuna-Ragil/CampusXP/internal/database"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -54,10 +56,18 @@ func main() {
 func SetupApp(db *config.DB, bkt *config.Bucket) api.Deps{
 	authMiddleware := middleware.NewAuthDB(db)
 
-	// bucketRepo := database.NewBucketRepo(bkt.Client)
-	// bucketService := services.NewBucketService(bucketRepo)	//Nanti dipake pas ada function lain
+	studentRepo := repository.NewStudentRepository(db.Gorm)
+	adminRepo := repository.NewAdminRepository(db.Gorm)
+
+	studentService := services.NewStudentService(studentRepo)
+	adminService := services.NewAdminService(adminRepo, studentRepo)
+
+	studentHandler := handlers.NewStudentHandler(studentService)
+	adminHandler := handlers.NewAdminHandler(adminService)
 
 	return api.Deps{
 		AuthMiddleware: authMiddleware,
+		StudentHandler: studentHandler,
+		AdminHandler:   adminHandler,
 	}
 }
