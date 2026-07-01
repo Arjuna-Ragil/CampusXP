@@ -42,7 +42,6 @@ services:
 
 volumes:
   pg_data:
-  seaweed_data:
 
 networks:
   campusxp_net:
