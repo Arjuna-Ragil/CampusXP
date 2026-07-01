@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Arjuna-Ragil/CampusXP/internal/config"
+	"github.com/Arjuna-Ragil/CampusXP/internal/core/models"
 	"github.com/coreos/go-oidc"
 	"github.com/gin-gonic/gin"
 )

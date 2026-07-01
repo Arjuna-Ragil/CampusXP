@@ -7,8 +7,8 @@ import (
 	"github.com/Arjuna-Ragil/CampusXP/internal/api"
 	"github.com/Arjuna-Ragil/CampusXP/internal/config"
 	"github.com/Arjuna-Ragil/CampusXP/internal/core/middleware"
-	"github.com/Arjuna-Ragil/CampusXP/internal/core/services"
-	"github.com/Arjuna-Ragil/CampusXP/internal/database"
+	// "github.com/Arjuna-Ragil/CampusXP/internal/core/services"
+	// "github.com/Arjuna-Ragil/CampusXP/internal/database"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -54,8 +54,8 @@ func main() {
 func SetupApp(db *config.DB, bkt *config.Bucket) api.Deps{
 	authMiddleware := middleware.NewAuthDB(db)
 
-	//bucketRepo := database.NewBucketRepo(bkt.Client)
-	//bucketService := services.NewBucketService(bucketRepo)	Nanti dipake pas ada function lain
+	// bucketRepo := database.NewBucketRepo(bkt.Client)
+	// bucketService := services.NewBucketService(bucketRepo)	//Nanti dipake pas ada function lain
 
 	return api.Deps{
 		AuthMiddleware: authMiddleware,
