@@ -11,19 +11,6 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - campusxp_net
-  bucket:
-    image: chrislusf/seaweedfs
-    container_name: campusxp_bkt
-    restart: unless-stopped
-    ports:
-      - "8334:8333"
-      - "8889:8888"
-    command: "server -s3 -filer -master.volumeSizeLimitMB=1024 -volume.max=100 -s3.config=/etc/seaweedfs/s3_config.json"
-    volumes:
-      - seaweed_data:/data
-      - ./seaweedfs_config/s3_config.json:/etc/seaweedfs/s3_config.json
-    networks:
-      - campusxp_net
 
   backend:
     build: ./server
@@ -35,7 +22,6 @@ services:
       - .env
     depends_on:
       - db
-      - bucket
 
   frontend:
     build: ./ui
