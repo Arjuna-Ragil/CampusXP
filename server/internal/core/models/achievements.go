@@ -1,18 +1,26 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Achievement struct {
-	ID      string `gorm:"primaryKey" json:"id"`
-	Type    string `gorm:"not null" json:"Type"` // ubah jadi enum, nanti valuenya biar aku yang ubah
-	Title   string `gorm:"not null" json:"title"`
-	Desc    string `json:"desc"`
-	FileURL string `gorm:"not null" json:"file_url"`
-	Status  string `gorm:"not null" json:"status"` // semua status uabh ke enum
-	Points   string `json:"points"`
+	ID             string          `gorm:"type:uuid;primaryKey" json:"id"`
+	StudentID      string          `gorm:"type:uuid;not null" json:"student_id"`
+	StudentProfile *StudentProfile `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;" json:"student_profile,omitempty"`
+	Type           AchievementType `gorm:"type:varchar(50);not null" json:"type"`
+	Title          string          `gorm:"not null" json:"title"`
+	Description    string          `json:"description"`
+	FileURL        string          `json:"file_url"`
+	Status         ApprovalStatus  `gorm:"type:varchar(20);default:'PENDING'" json:"status"`
+	PointsAwarded  int             `gorm:"default:0" json:"points_awarded"`
+	AdminID        *string         `gorm:"type:uuid" json:"admin_id"`
+	Admin          *User           `gorm:"foreignKey:AdminID;constraint:OnDelete:SET NULL;" json:"admin,omitempty"`
+	CreatedAt      time.Time       `json:"created_at"`
+	UpdatedAt      time.Time       `json:"updated_at"`
 }
 
 func (c *Achievement) BeforeCreate(tx *gorm.DB) (err error) {

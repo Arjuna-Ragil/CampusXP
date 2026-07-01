@@ -2,6 +2,8 @@ package config
 
 import (
 	"log"
+
+	"github.com/Arjuna-Ragil/CampusXP/internal/core/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -10,8 +12,9 @@ type DB struct {
 	Gorm *gorm.DB
 }
 
-func ConnectDB(cfg *Config) (*DB, error){
-	gormDB, err := gorm.Open(postgres.Open(cfg.DBURL), &gorm.Config{}); if err != nil {
+func ConnectDB(cfg *Config) (*DB, error) {
+	gormDB, err := gorm.Open(postgres.Open(cfg.DBURL), &gorm.Config{})
+	if err != nil {
 		log.Fatalf("Connection to DB Failed: %v", err)
 	}
 	log.Printf("Connected to DB")
@@ -21,7 +24,13 @@ func ConnectDB(cfg *Config) (*DB, error){
 
 func (db *DB) MigrateDB() error {
 	err := db.Gorm.AutoMigrate(
-		
+		&models.User{},
+		&models.StudentProfile{},
+		&models.Skill{},
+		&models.StudentSkill{},
+		&models.Achievement{},
+		&models.Reward{},
+		&models.RewardClaim{},
 	)
 	if err != nil {
 		log.Fatalf("Failed to migrate DB: %v", err)
