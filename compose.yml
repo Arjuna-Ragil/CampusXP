@@ -28,7 +28,7 @@ services:
     container_name: campusxp_fe
     restart: unless-stopped
     ports:
-      - "3005:3000"
+      - "3006:3000"
     env_file:
       - .env
     environment:
