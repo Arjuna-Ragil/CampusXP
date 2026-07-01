@@ -11,7 +11,7 @@ type AdminService interface {
 	GetDashboardStats() (map[string]int64, error)
 	GetPendingSubmissions() ([]models.Achievement, error)
 	VerifySubmission(id string, status models.ApprovalStatus, pointsAwarded int) error
-	SearchTalent(skillName string, minPoints int) ([]models.StudentProfile, error)
+	SearchTalent(skillName string, major string) ([]models.StudentProfile, error)
 
 	CreateReward(reward *models.Reward) error
 	GetRewards() ([]models.Reward, error)
@@ -77,8 +77,8 @@ func (s *adminService) VerifySubmission(id string, status models.ApprovalStatus,
 	return tx.Commit().Error
 }
 
-func (s *adminService) SearchTalent(skillName string, minPoints int) ([]models.StudentProfile, error) {
-	return s.repo.GetStudentsWithFilters(skillName, minPoints)
+func (s *adminService) SearchTalent(skillName string, major string) ([]models.StudentProfile, error) {
+	return s.repo.GetStudentsWithFilters(skillName, major)
 }
 
 func (s *adminService) CreateReward(reward *models.Reward) error {

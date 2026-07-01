@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/Arjuna-Ragil/CampusXP/internal/core/models"
 	"github.com/Arjuna-Ragil/CampusXP/internal/core/services"
@@ -28,15 +27,9 @@ func (h *AdminHandler) GetDashboardStats(c *gin.Context) {
 
 func (h *AdminHandler) GetStudents(c *gin.Context) {
 	skillName := c.Query("skill")
-	minPointsStr := c.Query("min_points")
-	minPoints := 0
-	if minPointsStr != "" {
-		if parsed, err := strconv.Atoi(minPointsStr); err == nil {
-			minPoints = parsed
-		}
-	}
+	major := c.Query("major")
 
-	students, err := h.adminService.SearchTalent(skillName, minPoints)
+	students, err := h.adminService.SearchTalent(skillName, major)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

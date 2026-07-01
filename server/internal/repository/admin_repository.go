@@ -10,7 +10,7 @@ type AdminRepository interface {
 	GetPendingSubmissions() ([]models.Achievement, error)
 	UpdateSubmissionStatus(tx *gorm.DB, id string, status models.ApprovalStatus, pointsAwarded int) error
 	GetSubmissionByID(id string) (*models.Achievement, error)
-	GetStudentsWithFilters(skillName string, minPoints int) ([]models.StudentProfile, error)
+	GetStudentsWithFilters(skillName string, major string) ([]models.StudentProfile, error)
 	
 	// Rewards CRUD
 	CreateReward(reward *models.Reward) error
@@ -82,10 +82,14 @@ func (r *adminRepository) UpdateSubmissionStatus(tx *gorm.DB, id string, status 
 		}).Error
 }
 
-func (r *adminRepository) GetStudentsWithFilters(skillName string, minPoints int) ([]models.StudentProfile, error) {
+func (r *adminRepository) GetStudentsWithFilters(skillName string, major string) ([]models.StudentProfile, error) {
 	var profiles []models.StudentProfile
 
-	query := r.db.Preload("User").Preload("StudentSkills.Skill").Where("total_points >= ?", minPoints)
+	query := r.db.Preload("User").Preload("StudentSkills.Skill")
+
+	if major != "" {
+		query = query.Where("major ILIKE ?", "%"+major+"%")
+	}
 
 	if skillName != "" {
 		// Join with StudentSkills and Skills tables to strictly filter by the skill name

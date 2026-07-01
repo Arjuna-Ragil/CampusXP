@@ -1,5 +1,7 @@
 import Link from "next/link";
 import React from "react";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { 
   LineChart, 
   Users, 
@@ -8,10 +10,16 @@ import {
   Menu, 
   Search, 
   Bell, 
-  Award 
+  Award,
+  LogOut 
 } from "lucide-react";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
+  const username = user?.name || user?.email?.split('@')[0] || "Admin User";
+  const initial = username.charAt(0).toUpperCase();
+
   return (
     <div className="bg-background text-on-background min-h-screen flex overflow-hidden">
       {/* Sidebar Navigation (Admin Panel Mapping) */}
@@ -39,20 +47,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         </nav>
         <div className="mt-auto pt-lg border-t border-on-primary-container/20">
-          <div className="flex items-center gap-3 px-2">
-            <img className="w-10 h-10 rounded-full border-2 border-on-primary-container/30 object-cover" data-alt="Admin User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxvCdEC4i2A7mmNJIadewOrf5p5pgSXsdYck6uh3E15SlCcAIdhs6Hyi1Es1dUZBkZMuZkyJu0fNBN5xHwvaIkX1Pzmu5jQ0KQbPlPTK9_e5W2Xy58YJFTTAojeFZL6E07BUYWjQ7iZY5poMBierfHLO5ePSIVmGOqeTZDXFHehKanXfM0Kj5dN0EIrOQ8l2u3lKBQ3d8eKK1kiFgc4FDJf_L317_obL3_G8xkXrgLbFGqbmv22vD_mkSbeebgr7dSKv7h888XSS4"/>
-            <div>
-              <p className="font-label-md text-label-md text-on-primary-container font-bold">Admin User</p>
-              <p className="font-label-sm text-label-sm text-on-primary-container/60">System Director</p>
-            </div>
-          </div>
+          <Link href="/api/auth/signout" className="flex items-center gap-3 px-4 py-3 text-on-primary-container/80 hover:text-error hover:bg-error/10 rounded-lg transition-colors w-full">
+            <LogOut className="w-5 h-5" />
+            <span className="font-label-md text-label-md">Logout</span>
+          </Link>
         </div>
       </aside>
       
       {/* Main Content Canvas */}
       <main className="grow overflow-y-auto custom-scrollbar h-screen flex flex-col">
         {/* Top Navigation (Mobile/Universal) */}
-        <header className="bg-surface-container-lowest shadow-sm flex justify-between items-center px-gutter w-full h-16 sticky top-0 z-40">
+        <header className="bg-surface-container-lowest shadow-sm flex justify-between items-center px-gutter py-3 w-full h-20 sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <button className="lg:hidden p-2 hover:bg-surface-variant rounded-full transition-colors flex items-center justify-center">
               <Menu className="w-6 h-6" />
@@ -60,10 +65,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <h2 className="font-headline-md text-headline-md font-bold text-primary">Dashboard Overview</h2>
           </div>
           <div className="flex items-center gap-md">
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant w-4 h-4" />
-              <input className="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-label-md focus:ring-2 focus:ring-secondary transition-all w-64" placeholder="Search analytics..." type="text"/>
-            </div>
             <div className="flex items-center gap-2">
               <button className="p-2 hover:bg-surface-variant rounded-full transition-colors relative flex items-center justify-center">
                 <Bell className="text-on-surface-variant w-6 h-6" />
@@ -72,6 +73,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button className="p-2 hover:bg-surface-variant rounded-full transition-colors flex items-center justify-center">
                 <Award className="text-on-surface-variant w-6 h-6" />
               </button>
+            </div>
+            <div className="h-8 w-px bg-outline-variant mx-2"></div>
+            <div className="flex items-center gap-3 cursor-pointer hover:bg-surface-variant p-2 rounded-lg transition-colors">
+              <div className="hidden md:block text-right">
+                <p className="font-label-md text-label-md text-on-surface font-bold leading-tight">{username}</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">System Director</p>
+              </div>
+              {user?.image ? (
+                <img className="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" data-alt={username} src={user.image}/>
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg border-2 border-primary/20">
+                  {initial}
+                </div>
+              )}
             </div>
           </div>
         </header>
