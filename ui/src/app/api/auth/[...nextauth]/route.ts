@@ -17,7 +17,8 @@ export const authOptions: NextAuthOptions = {
       if (token.accessToken && !token.role) {
         try {
           // Fetch the user's role from the backend
-          const res = await fetch("http://127.0.0.1:8080/api/v1/users/me", {
+          const apiUrl = process.env.INTERNAL_API_URL || "http://backend:8080/api/v1";
+          const res = await fetch(`${apiUrl}/users/me`, {
             headers: {
               Authorization: `Bearer ${token.accessToken}`,
             },

@@ -7,9 +7,10 @@ import { serverFetch } from "@/lib/api/serverApi";
 export default async function StudentLeaderboard({
   searchParams
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const isByMajor = searchParams.filter === 'major';
+  const resolvedSearchParams = await searchParams;
+  const isByMajor = resolvedSearchParams.filter === 'major';
   let profile = null;
   let leaderboard: any[] = [];
   try {
