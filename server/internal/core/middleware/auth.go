@@ -57,8 +57,9 @@ func (db *AuthDB) AuthMiddleware() gin.HandlerFunc {
 		}
 		var claims struct {
 			Subject  string `json:"sub"`
-			Email    string `json:"email"`
-			Username string `json:"username"`
+			Email             string `json:"email"`
+			PreferredUsername string `json:"preferred_username"`
+			Name              string `json:"name"`
 		}
 		if err := idToken.Claims(&claims); err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -67,15 +68,33 @@ func (db *AuthDB) AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		var user models.User
-		if err := db.DB.Gorm.Where(models.User{ID: claims.Subject}).Attrs(models.User{
+		username := claims.PreferredUsername
+		if username == "" {
+			username = strings.Split(claims.Email, "@")[0]
+		}
+
+		err = db.DB.Gorm.Where(models.User{ID: claims.Subject}).Attrs(models.User{
 			Email:    claims.Email,
-			Username: claims.Username,
-		}).FirstOrCreate(&user).Error; err != nil {
+			Username: username,
+			Role:     models.RoleMahasiswa, // Default role
+		}).FirstOrCreate(&user).Error
+		
+		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"error": "Failed to find / create user",
 			})
 			return
 		}
+		// Ensure StudentProfile exists for Mahasiswa
+		if user.Role == models.RoleMahasiswa {
+			var profile models.StudentProfile
+			db.DB.Gorm.Where(models.StudentProfile{UserID: user.ID}).Attrs(models.StudentProfile{
+				FullName: claims.Name, // Use OIDC name if available
+				NIM:      "N/A",       // Default, user should update later
+				Major:    "Undeclared",
+			}).FirstOrCreate(&profile)
+		}
+
 		c.Set("userID", user.ID)
 		c.Next()
 	}

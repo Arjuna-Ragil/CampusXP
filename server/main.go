@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/Arjuna-Ragil/CampusXP/internal/api"
 	"github.com/Arjuna-Ragil/CampusXP/internal/api/handlers"
@@ -10,6 +11,7 @@ import (
 	"github.com/Arjuna-Ragil/CampusXP/internal/core/middleware"
 	"github.com/Arjuna-Ragil/CampusXP/internal/core/services"
 	"github.com/Arjuna-Ragil/CampusXP/internal/repository"
+	"github.com/Arjuna-Ragil/CampusXP/internal/seed"
 	// "github.com/Arjuna-Ragil/CampusXP/internal/database"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -43,9 +45,13 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	deps := SetupApp(db, bkt)
+	app := SetupApp(db, bkt)
 
-	api.SetupRouter(r, deps)
+	if os.Getenv("SEED_DB") == "true" {
+		seed.SeedDB(db.Gorm)
+	}
+
+	api.SetupRouter(r, app)
 
 	server_port := fmt.Sprintf(":%s", cfg.Port)
 	if err := r.Run(server_port); err != nil {

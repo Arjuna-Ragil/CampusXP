@@ -1,7 +1,18 @@
 import StudentLayout from "@/components/layout/StudentLayout";
 import { Star, PlusCircle, Upload, Send, Filter, CheckCircle, XCircle, FileText, Lightbulb } from "lucide-react";
 
-export default function StudentSubmission() {
+import { serverFetch } from "@/lib/api/serverApi";
+import { submitAchievement } from "@/app/actions/studentActions";
+
+export default async function StudentSubmission() {
+  let achievements: any[] = [];
+  try {
+    const res = await serverFetch("/students/achievements");
+    achievements = res.data || [];
+  } catch (err) {
+    console.error("Failed to fetch achievements", err);
+  }
+
   return (
     <StudentLayout>
       {/* TopAppBar Context */}
@@ -31,27 +42,31 @@ export default function StudentSubmission() {
               </div>
               <h3 className="font-headline-md text-headline-md text-primary">Add New Achievement</h3>
             </div>
-            <form className="space-y-md" id="achievement-form">
+            <form className="space-y-md" action={submitAchievement}>
               <div className="space-y-base">
                 <label className="font-label-md text-label-md text-on-surface-variant">Achievement Title</label>
-                <input className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline" placeholder="e.g., Python Web Scraper Project" type="text"/>
+                <input name="title" required className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline" placeholder="e.g., Python Web Scraper Project" type="text"/>
               </div>
               <div className="space-y-base">
                 <label className="font-label-md text-label-md text-on-surface-variant">Type</label>
-                <select className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all">
-                  <option>Skill</option>
-                  <option>Project</option>
-                  <option>Certificate</option>
+                <select name="type" required className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all">
+                  <option value="PORTFOLIO_PERSONAL">Portfolio Personal</option>
+                  <option value="PORTFOLIO_FREELANCE">Portfolio Freelance</option>
+                  <option value="PORTFOLIO_INDUSTRI">Portfolio Industri</option>
+                  <option value="SERTIFIKAT_LOKAL">Sertifikat Lokal</option>
+                  <option value="SERTIFIKAT_REGIONAL">Sertifikat Regional</option>
+                  <option value="SERTIFIKAT_NASIONAL">Sertifikat Nasional</option>
+                  <option value="SERTIFIKAT_INTERNASIONAL">Sertifikat Internasional</option>
                 </select>
               </div>
               <div className="space-y-base">
                 <label className="font-label-md text-label-md text-on-surface-variant">Description</label>
-                <textarea className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline" placeholder="Describe your contribution and what you learned..." rows={4}></textarea>
+                <textarea name="description" className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline" placeholder="Describe your contribution and what you learned..." rows={4}></textarea>
               </div>
               <div className="space-y-base">
                 <label className="font-label-md text-label-md text-on-surface-variant">Evidence (File/URL)</label>
                 <div className="relative">
-                  <input className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline pr-xl" placeholder="https://github.com/your-username/repo" type="text"/>
+                  <input name="evidence_url" required className="w-full p-sm rounded-lg bg-surface-container border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary transition-all placeholder:text-outline pr-xl" placeholder="https://github.com/your-username/repo" type="text"/>
                   <button className="absolute right-2 top-1/2 -translate-y-1/2 p-base text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" type="button">
                     <Upload className="w-5 h-5" />
                   </button>
@@ -87,54 +102,44 @@ export default function StudentSubmission() {
               </thead>
               <tbody id="submission-table-body">
                 {/* Data Rows */}
-                <tr className="transition-colors hover:bg-primary/5 cursor-default">
-                  <td className="p-md">
-                    <div className="font-bold text-on-surface">Advanced React Architecture</div>
-                    <div className="text-label-sm font-label-sm text-outline">github.com/repo/react-arch</div>
-                  </td>
-                  <td className="p-md text-label-md">Oct 12, 2024</td>
-                  <td className="p-md">
-                    <span className="px-sm py-base rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm">Project</span>
-                  </td>
-                  <td className="p-md">
-                    <span className="flex items-center gap-xs text-tertiary-container font-bold text-label-sm uppercase tracking-wider">
-                      <span className="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
-                      Pending
-                    </span>
-                  </td>
-                </tr>
-                <tr className="transition-colors hover:bg-primary/5 cursor-default">
-                  <td className="p-md">
-                    <div className="font-bold text-on-surface">Data Structures Mastery</div>
-                    <div className="text-label-sm font-label-sm text-outline">Certificate ID: CS-29301</div>
-                  </td>
-                  <td className="p-md text-label-md">Sep 28, 2024</td>
-                  <td className="p-md">
-                    <span className="px-sm py-base rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm">Certificate</span>
-                  </td>
-                  <td className="p-md">
-                    <span className="flex items-center gap-xs text-on-primary-container font-bold text-label-sm uppercase tracking-wider">
-                      <CheckCircle className="w-4 h-4" />
-                      Approved
-                    </span>
-                  </td>
-                </tr>
-                <tr className="transition-colors hover:bg-primary/5 cursor-default">
-                  <td className="p-md opacity-60">
-                    <div className="font-bold text-on-surface">Intro to Figma</div>
-                    <div className="text-label-sm font-label-sm text-outline">UI Foundations Workshop</div>
-                  </td>
-                  <td className="p-md text-label-md">Aug 15, 2024</td>
-                  <td className="p-md">
-                    <span className="px-sm py-base rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm">Skill</span>
-                  </td>
-                  <td className="p-md">
-                    <span className="flex items-center gap-xs text-error font-bold text-label-sm uppercase tracking-wider">
-                      <XCircle className="w-4 h-4" />
-                      Rejected
-                    </span>
-                  </td>
-                </tr>
+                {achievements.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="p-xl text-center text-on-surface-variant">
+                      No submissions found.
+                    </td>
+                  </tr>
+                ) : (
+                  achievements.map((ach) => (
+                    <tr key={ach.id} className="transition-colors hover:bg-primary/5 cursor-default">
+                      <td className="p-md">
+                        <div className="font-bold text-on-surface">{ach.title}</div>
+                        <div className="text-label-sm font-label-sm text-outline truncate max-w-[200px]">{ach.evidence_url}</div>
+                      </td>
+                      <td className="p-md text-label-md">{new Date(ach.created_at).toLocaleDateString()}</td>
+                      <td className="p-md">
+                        <span className="px-sm py-base rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm">{ach.type}</span>
+                      </td>
+                      <td className="p-md">
+                        {ach.status === "APPROVED" ? (
+                          <span className="flex items-center gap-xs text-on-primary-container font-bold text-label-sm uppercase tracking-wider">
+                            <CheckCircle className="w-4 h-4" />
+                            Approved
+                          </span>
+                        ) : ach.status === "REJECTED" ? (
+                          <span className="flex items-center gap-xs text-error font-bold text-label-sm uppercase tracking-wider">
+                            <XCircle className="w-4 h-4" />
+                            Rejected
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-xs text-tertiary-container font-bold text-label-sm uppercase tracking-wider">
+                            <span className="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
+                            Pending
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
             {/* Empty State (Hidden by default, shown if no rows) */}

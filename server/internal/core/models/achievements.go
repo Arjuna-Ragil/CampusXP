@@ -8,16 +8,16 @@ import (
 )
 
 type Achievement struct {
-	ID             string          `gorm:"type:uuid;primaryKey" json:"id"`
-	StudentID      string          `gorm:"type:uuid;not null" json:"student_id"`
+	ID             string          `gorm:"type:varchar(255);primaryKey" json:"id"`
+	StudentID      string          `gorm:"type:varchar(255);not null" json:"student_id"`
 	StudentProfile *StudentProfile `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;" json:"student_profile,omitempty"`
-	Type           AchievementType `gorm:"type:enum('SERTIFIKAT_LOKAL','SERTIFIKAT_REGIONAL','SERTIFIKAT_NASIONAL','SERTIFIKAT_INTERNASIONAL','PORTFOLIO_PERSONAL','PORTFOLIO_FREELANCE','PORTFOLIO_INDUSTRI');not null" json:"type"`
+	Type           AchievementType `gorm:"type:varchar(50);not null" json:"type"`
 	Title          string          `gorm:"not null" json:"title"`
 	Description    string          `json:"description"`
 	EvidenceURL    string          `json:"evidence_url"`
-	Status         ApprovalStatus  `gorm:"type:enum('PENDING','APPROVED','REJECTED');default:'PENDING'" json:"status"`
+	Status         ApprovalStatus  `gorm:"type:varchar(20);default:'PENDING'" json:"status"`
 	PointsAwarded  int             `gorm:"default:0" json:"points_awarded"`
-	AdminID        *string         `gorm:"type:uuid" json:"admin_id"`
+	AdminID        *string         `gorm:"type:varchar(255)" json:"admin_id"`
 	Admin          *User           `gorm:"foreignKey:AdminID;constraint:OnDelete:SET NULL;" json:"admin,omitempty"`
 	CreatedAt      time.Time       `json:"created_at"`
 	UpdatedAt      time.Time       `json:"updated_at"`

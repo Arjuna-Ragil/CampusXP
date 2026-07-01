@@ -1,7 +1,17 @@
 import StudentLayout from "@/components/layout/StudentLayout";
 import { IdCard, TrendingUp, Code, Users, Award, Brain, Send, Rocket, Sparkles } from "lucide-react";
 
-export default function StudentDashboard() {
+import { serverFetch } from "@/lib/api/serverApi";
+
+export default async function StudentDashboard() {
+  let profile = null;
+  try {
+    const res = await serverFetch("/students/profile");
+    profile = res.data;
+  } catch (err) {
+    console.error("Failed to fetch profile", err);
+  }
+
   return (
     <StudentLayout>
       {/* Hero Section */}
@@ -11,11 +21,11 @@ export default function StudentDashboard() {
         </div>
         <div className="relative z-10 p-lg md:p-xl flex flex-col md:flex-row justify-between items-center gap-lg">
           <div className="text-on-primary">
-            <h2 className="font-display-lg text-display-lg mb-xs">Welcome back, Alex!</h2>
-            <p className="font-headline-md text-headline-md opacity-90">B.S. Computer Science</p>
+            <h2 className="font-display-lg text-display-lg mb-xs">Welcome back, {profile?.profile?.full_name || "Student"}!</h2>
+            <p className="font-headline-md text-headline-md opacity-90">{profile?.profile?.major || "Unknown Major"}</p>
             <div className="flex items-center gap-sm mt-md opacity-80">
               <IdCard className="w-6 h-6" />
-              <span className="font-label-md text-label-md">Student ID: 2024-88592</span>
+              <span className="font-label-md text-label-md">Student ID: {profile?.profile?.nim || "Unknown"}</span>
             </div>
           </div>
           <div className="flex flex-col items-center justify-center p-md bg-surface-container-lowest/10 backdrop-blur-md rounded-xl border border-white/20 animate-float">
@@ -35,7 +45,7 @@ export default function StudentDashboard() {
             <div className="p-md bg-primary-container text-on-primary">
               <h3 className="font-label-md text-label-md uppercase tracking-wider opacity-70">Total Reward Points</h3>
               <div className="flex items-baseline gap-xs mt-base">
-                <span className="font-display-lg text-display-lg text-tertiary-fixed">2,450</span>
+                <span className="font-display-lg text-display-lg text-tertiary-fixed">{profile?.total_points || 0}</span>
                 <span className="font-label-md text-label-md">PTS</span>
               </div>
             </div>

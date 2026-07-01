@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:18-alpine
-    container_name: sprintmont_db
+    container_name: campusxp_db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -13,7 +13,7 @@ services:
       - campusxp_net
   bucket:
     image: chrislusf/seaweedfs
-    container_name: sprintmont_bkt
+    container_name: campusxp_bkt
     restart: unless-stopped
     ports:
       - "8333:8333"
@@ -27,7 +27,7 @@ services:
 
   backend:
     build: ./server
-    container_name: sprintmont_be
+    container_name: campusxp_be
     restart: unless-stopped
     networks:
       - campusxp_net
@@ -39,7 +39,7 @@ services:
 
   frontend:
     build: ./ui
-    container_name: sprintmont_fe
+    container_name: campusxp_fe
     restart: unless-stopped
     ports:
       - "3005:3000"

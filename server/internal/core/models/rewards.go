@@ -8,7 +8,7 @@ import (
 )
 
 type Reward struct {
-	ID           string        `gorm:"type:uuid;primaryKey" json:"id"`
+	ID           string        `gorm:"type:varchar(255);primaryKey" json:"id"`
 	Name         string        `gorm:"not null" json:"name"`
 	Description  string        `json:"description"`
 	PointCost    int           `gorm:"not null" json:"point_cost"`

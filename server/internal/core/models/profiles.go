@@ -8,8 +8,8 @@ import (
 )
 
 type StudentProfile struct {
-	ID            string         `gorm:"type:uuid;primaryKey" json:"id"`
-	UserID        string         `gorm:"type:uuid;unique;not null" json:"user_id"`
+	ID            string         `gorm:"type:varchar(255);primaryKey" json:"id"`
+	UserID        string         `gorm:"type:varchar(255);unique;not null" json:"user_id"`
 	User          *User          `gorm:"constraint:OnDelete:CASCADE;" json:"user,omitempty"`
 	FullName      string         `gorm:"not null" json:"full_name"`
 	NIM           string         `gorm:"unique;not null" json:"nim"`
@@ -18,9 +18,9 @@ type StudentProfile struct {
 	Bio           string         `json:"bio"`
 	CreatedAt     time.Time      `json:"created_at"`
 	UpdatedAt     time.Time      `json:"updated_at"`
-	StudentSkills []StudentSkill `gorm:"constraint:OnDelete:CASCADE;" json:"student_skills,omitempty"`
-	Achievements  []Achievement  `gorm:"constraint:OnDelete:CASCADE;" json:"achievements,omitempty"`
-	RewardClaims  []RewardClaim  `gorm:"constraint:OnDelete:CASCADE;" json:"reward_claims,omitempty"`
+	StudentSkills []StudentSkill `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;" json:"student_skills,omitempty"`
+	Achievements  []Achievement  `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;" json:"achievements,omitempty"`
+	RewardClaims  []RewardClaim  `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;" json:"reward_claims,omitempty"`
 }
 
 func (c *StudentProfile) BeforeCreate(tx *gorm.DB) (err error) {

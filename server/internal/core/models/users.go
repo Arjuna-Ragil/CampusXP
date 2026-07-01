@@ -35,10 +35,10 @@ const (
 )
 
 type User struct {
-	ID             string          `gorm:"type:uuid;primaryKey" json:"id"`
+	ID             string          `gorm:"type:varchar(255);primaryKey" json:"id"`
 	Username       string          `gorm:"not null" json:"username"`
 	Email          string          `gorm:"unique;not null" json:"email"`
-	Role           RoleType        `gorm:"type:enum('ADMIN','MAHASISWA');not null" json:"role"`
+	Role           RoleType        `gorm:"type:varchar(50);not null" json:"role"`
 	CreatedAt      time.Time       `json:"created_at"`
 	UpdatedAt      time.Time       `json:"updated_at"`
 	StudentProfile *StudentProfile `gorm:"constraint:OnDelete:CASCADE;" json:"student_profile,omitempty"`

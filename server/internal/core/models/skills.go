@@ -8,7 +8,7 @@ import (
 )
 
 type Skill struct {
-	ID            string         `gorm:"type:uuid;primaryKey" json:"id"`
+	ID            string         `gorm:"type:varchar(255);primaryKey" json:"id"`
 	Name          string         `gorm:"unique;not null" json:"name"`
 	CreatedAt     time.Time      `json:"created_at"`
 	UpdatedAt     time.Time      `json:"updated_at"`

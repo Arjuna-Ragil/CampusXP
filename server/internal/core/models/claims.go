@@ -8,10 +8,10 @@ import (
 )
 
 type RewardClaim struct {
-	ID             string          `gorm:"type:uuid;primaryKey" json:"id"`
-	StudentID      string          `gorm:"type:uuid;not null" json:"student_id"`
+	ID             string          `gorm:"type:varchar(255);primaryKey" json:"id"`
+	StudentID      string          `gorm:"type:varchar(255);not null" json:"student_id"`
 	StudentProfile *StudentProfile `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;" json:"student_profile,omitempty"`
-	RewardID       string          `gorm:"type:uuid;not null" json:"reward_id"`
+	RewardID       string          `gorm:"type:varchar(255);not null" json:"reward_id"`
 	Reward         *Reward         `gorm:"constraint:OnDelete:CASCADE;" json:"reward,omitempty"`
 	ClaimedAt      time.Time       `json:"claimed_at"`
 }
