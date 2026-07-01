@@ -31,11 +31,6 @@ func main() {
 		log.Fatalf("Failed to migrate DB: %v", err)
 	}
 
-	bkt, err := config.InitBucket(&cfg)
-	if err != nil {
-		log.Fatalf("Bucket didn't initiate successfully: %v", err)
-	}
-
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -45,7 +40,7 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	app := SetupApp(db, bkt)
+	app := SetupApp(db)
 
 	if os.Getenv("SEED_DB") == "true" {
 		seed.SeedDB(db.Gorm)
@@ -59,7 +54,7 @@ func main() {
 	}
 }
 
-func SetupApp(db *config.DB, bkt *config.Bucket) api.Deps{
+func SetupApp(db *config.DB) api.Deps{
 	authMiddleware := middleware.NewAuthDB(db)
 
 	studentRepo := repository.NewStudentRepository(db.Gorm)
