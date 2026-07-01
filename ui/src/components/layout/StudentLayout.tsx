@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import ChatbotFAB from "@/components/chat/ChatbotFAB";
 import { 
   LayoutDashboard, 
   UserCircle, 
@@ -134,13 +135,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
         </footer>
       </main>
       
-      {/* Floating Action Button for Students */}
-      <div className="fixed bottom-margin right-margin z-50">
-        <button className="w-16 h-16 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform group relative">
-          <Plus className="w-8 h-8" />
-          <span className="absolute right-full mr-md py-xs px-sm bg-inverse-surface text-inverse-on-surface text-label-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Create New Project</span>
-        </button>
-      </div>
+      {/* Floating Action Button / Chatbot for Students */}
+      <ChatbotFAB />
     </div>
   );
 }
