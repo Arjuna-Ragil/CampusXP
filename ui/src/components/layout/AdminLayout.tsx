@@ -1,12 +1,9 @@
 import Link from "next/link";
 import React from "react";
+import AdminSidebarNav from "./AdminSidebarNav";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { 
-  LineChart, 
-  Users, 
-  UserCheck, 
-  Settings, 
   Menu, 
   Search, 
   Bell, 
@@ -25,29 +22,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Sidebar Navigation (Admin Panel Mapping) */}
       <aside className="h-screen w-64 bg-primary-container dark:bg-primary flex-col gap-base p-md hidden lg:flex shadow-md sticky top-0 z-50">
         <div className="mb-lg px-xs">
-          <h1 className="font-headline-md text-headline-md text-on-primary-container">Admin Panel</h1>
-          <p className="font-label-sm text-label-sm text-on-primary-container/70 mt-1">Management Console</p>
+          <h1 className="font-display-sm text-display-sm font-bold text-on-primary">Campus XP</h1>
+          <p className="font-label-md text-label-md text-on-primary/70 mt-1">Admin Panel</p>
         </div>
-        <nav className="grow flex flex-col gap-2">
-          <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 hover:text-on-primary hover:bg-primary/50 text-on-primary-container/80 rounded-lg transition-colors">
-            <LineChart className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Overview</span>
-          </Link>
-          <Link href="/admin/directory" className="flex items-center gap-3 px-4 py-3 text-on-primary-container/80 hover:text-on-primary hover:bg-primary/50 rounded-lg transition-colors">
-            <Users className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Talent Pool</span>
-          </Link>
-          <Link href="/admin/verification" className="flex items-center gap-3 px-4 py-3 text-on-primary-container/80 hover:text-on-primary hover:bg-primary/50 rounded-lg transition-colors">
-            <UserCheck className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Verification</span>
-          </Link>
-          <Link href="/admin/rewards" className="flex items-center gap-3 px-4 py-3 text-on-primary-container/80 hover:text-on-primary hover:bg-primary/50 rounded-lg transition-colors">
-            <Settings className="w-5 h-5" />
-            <span className="font-label-md text-label-md">Rewards Management</span>
-          </Link>
-        </nav>
+        <AdminSidebarNav />
         <div className="mt-auto pt-lg border-t border-on-primary-container/20">
-          <Link href="/api/auth/signout" className="flex items-center gap-3 px-4 py-3 text-on-primary-container/80 hover:text-error hover:bg-error/10 rounded-lg transition-colors w-full">
+          <Link href="/api/auth/signout" className="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-error hover:bg-error/10 rounded-lg transition-colors w-full">
             <LogOut className="w-5 h-5" />
             <span className="font-label-md text-label-md">Logout</span>
           </Link>

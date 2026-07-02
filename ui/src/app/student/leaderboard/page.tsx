@@ -4,24 +4,10 @@ import { Medal, Clock, Trophy, Star, ChevronDown } from "lucide-react";
 
 import { serverFetch } from "@/lib/api/serverApi";
 
-export default async function StudentLeaderboard({
-  searchParams
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
-  const resolvedSearchParams = await searchParams;
-  const isByMajor = resolvedSearchParams.filter === 'major';
-  let profile = null;
+export default async function StudentLeaderboard() {
   let leaderboard: any[] = [];
   try {
-    const profileRes = await serverFetch("/students/profile");
-    profile = profileRes;
-    
-    let url = "/students/leaderboard";
-    if (isByMajor && profile?.profile?.major) {
-      url += `?major=${encodeURIComponent(profile.profile.major)}`;
-    }
-    const res = await serverFetch(url);
+    const res = await serverFetch("/students/leaderboard");
     leaderboard = res || [];
   } catch (err) {
     console.error("Failed to fetch leaderboard", err);
@@ -38,20 +24,6 @@ export default async function StudentLeaderboard({
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg">
         <div>
           <p className="font-body-md text-body-md text-on-surface-variant mb-base">Real-time standings across the institution</p>
-          <div className="flex bg-surface-container-high p-1 rounded-xl w-fit">
-            <Link 
-              href="/student/leaderboard"
-              className={`px-md py-xs rounded-lg font-label-md text-label-md transition-all ${!isByMajor ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant hover:text-primary"}`}
-            >
-              Overall
-            </Link>
-            <Link 
-              href="/student/leaderboard?filter=major"
-              className={`px-md py-xs rounded-lg font-label-md text-label-md transition-all ${isByMajor ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant hover:text-primary"}`}
-            >
-              By Major
-            </Link>
-          </div>
         </div>
       </div>
       {/* BENTO GRID LEADERBOARD LAYOUT */}

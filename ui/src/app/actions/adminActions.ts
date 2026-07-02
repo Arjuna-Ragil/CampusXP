@@ -4,9 +4,10 @@ import { serverFetch } from "@/lib/api/serverApi";
 import { revalidatePath } from "next/cache";
 
 export async function verifySubmissionAction(id: string, status: "APPROVED" | "REJECTED") {
+  const points_awarded = status === "APPROVED" ? 50 : 0;
   await serverFetch(`/admin/submissions/${id}/verify`, {
     method: "PUT",
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, points_awarded }),
   });
   revalidatePath("/admin/verification");
 }
